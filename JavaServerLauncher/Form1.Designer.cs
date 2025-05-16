@@ -55,7 +55,7 @@
             // 
             button1.Location = new Point(329, 12);
             button1.Name = "button1";
-            button1.Size = new Size(130, 38);
+            button1.Size = new Size(167, 38);
             button1.TabIndex = 1;
             button1.Text = "Download";
             button1.UseVisualStyleBackColor = true;
@@ -74,7 +74,7 @@
             // 
             button2.Location = new Point(329, 56);
             button2.Name = "button2";
-            button2.Size = new Size(130, 38);
+            button2.Size = new Size(167, 38);
             button2.TabIndex = 3;
             button2.Text = "Start Server";
             button2.UseVisualStyleBackColor = true;
@@ -83,7 +83,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(465, 15);
+            label2.Location = new Point(554, 15);
             label2.Name = "label2";
             label2.Size = new Size(194, 30);
             label2.TabIndex = 5;
@@ -91,7 +91,7 @@
             // 
             // numericUpDown1
             // 
-            numericUpDown1.Location = new Point(665, 15);
+            numericUpDown1.Location = new Point(754, 15);
             numericUpDown1.Maximum = new decimal(new int[] { 1215752192, 23, 0, 0 });
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(120, 35);
@@ -125,7 +125,7 @@
             // 
             button4.Location = new Point(329, 100);
             button4.Name = "button4";
-            button4.Size = new Size(130, 76);
+            button4.Size = new Size(167, 38);
             button4.TabIndex = 9;
             button4.Text = "Install Paper";
             button4.UseVisualStyleBackColor = true;
@@ -133,11 +133,11 @@
             // 
             // buttonOpenPluginBrowser
             // 
-            buttonOpenPluginBrowser.Location = new Point(465, 100);
+            buttonOpenPluginBrowser.Location = new Point(329, 144);
             buttonOpenPluginBrowser.Name = "buttonOpenPluginBrowser";
-            buttonOpenPluginBrowser.Size = new Size(166, 76);
+            buttonOpenPluginBrowser.Size = new Size(167, 38);
             buttonOpenPluginBrowser.TabIndex = 10;
-            buttonOpenPluginBrowser.Text = "Open Plugin Browser";
+            buttonOpenPluginBrowser.Text = "Plugin Browser";
             buttonOpenPluginBrowser.UseVisualStyleBackColor = true;
             buttonOpenPluginBrowser.Click += buttonOpenPluginBrowser_Click;
             // 

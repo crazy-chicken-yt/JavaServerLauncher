@@ -163,9 +163,9 @@ namespace JavaServerLauncher
         {
             string SelectedVersion = comboBoxVersions.SelectedItem.ToString();
             string type = GetVersionTypeFromID(SelectedVersion, versions);
-            label1.Text = $"Type: {type}";
-
             string jarDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JavaServerLauncher\\versions\\{SelectedVersion}";
+            string paperPath = Path.Combine(jarDirectory, "paper.jar");
+            label1.Text = $"Type: {type}";
             string jarPath = Path.Combine(jarDirectory, "server.jar");
 
             if (File.Exists(jarPath))
@@ -177,6 +177,24 @@ namespace JavaServerLauncher
             {
                 button1.Enabled = true;
                 button2.Enabled = false;
+            }
+
+            if (File.Exists(paperPath))
+            {
+                buttonOpenPluginBrowser.Enabled = true;
+            }
+            else
+            {
+                buttonOpenPluginBrowser.Enabled = false;
+            }
+
+            if (type != "release")
+            {
+                button4.Enabled = false;
+            }
+            else
+            {
+                button4.Enabled = true;
             }
         }
 
@@ -278,13 +296,22 @@ namespace JavaServerLauncher
             string SelectedVersion = comboBoxVersions.SelectedItem.ToString();
             string jarDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JavaServerLauncher\\versions\\{SelectedVersion}";
             string paperPath = Path.Combine(jarDirectory, "paper.jar");
+            JsonNode? paperManifest;
 
             HttpClient client = new HttpClient();
-            JsonNode paperManifest = JsonNode.Parse(await client.GetStringAsync(paperManifestURL));
+            try
+            {
+                paperManifest = JsonNode.Parse(await client.GetStringAsync(paperManifestURL));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("No paper server found for this version.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             JsonArray? paperBuilds = (JsonArray)paperManifest?["builds"];
 
 
-            JsonNode? latestBuild = paperBuilds[^1];
+            JsonNode? latestBuild = paperBuilds?[^1];
             string? applicationJarName = latestBuild?["downloads"]?["application"]?["name"]?.ToString();
             string? buildNumber = latestBuild?["build"]?.ToString();
 
@@ -304,6 +331,9 @@ namespace JavaServerLauncher
             MessageBox.Show("The download may take up to a minute.\nPlease do not close the program.");
             await DownloadServerJarAsync(paperJarDownloadUrl, paperPath);
             MessageBox.Show("Download complete.");
+
+            button4.Enabled = false;
+            buttonOpenPluginBrowser.Enabled = true;
         }
 
         private void buttonOpenPluginBrowser_Click(object sender, EventArgs e)

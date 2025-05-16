@@ -34,7 +34,7 @@ namespace JavaServerLauncher
             buttonDownload.Enabled = false;
 
             string facet = $"[[\"project_type:plugin\"],[\"server_side:required\"],[\"versions:{minecraftVersion}\"]]";
-            string url = $"https://api.modrinth.com/v2/search?query={Uri.EscapeDataString(query)}&facets={Uri.EscapeDataString(facet)}&limit=20";
+            string url = $"https://api.modrinth.com/v2/search?query={Uri.EscapeDataString(query)}&facets={Uri.EscapeDataString(facet)}&limit=100";
 
 
             HttpClient client = new HttpClient();
