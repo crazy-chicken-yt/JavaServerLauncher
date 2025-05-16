@@ -131,7 +131,6 @@ namespace JavaServerLauncher
 
             async Task DownloadServerJarAsync(string jarUrl, string destinationPath)
             {
-                MessageBox.Show(jarUrl, "debug");
                 HttpClient client = new HttpClient();
                 using HttpResponseMessage response = await client.GetAsync(jarUrl);
                 response.EnsureSuccessStatusCode();
@@ -140,7 +139,9 @@ namespace JavaServerLauncher
                 await response.Content.CopyToAsync(fs);
             }
 
+            MessageBox.Show("The download may take up to a minute.\nPlease do not close the program.");
             await DownloadServerJarAsync(JarDownloadUrl, downloadPath);
+            MessageBox.Show("Download complete.");
 
             string jarDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JavaServerLauncher\\versions\\{SelectedVersion}";
             string jarPath = Path.Combine(jarDirectory, "server.jar");
@@ -186,6 +187,8 @@ namespace JavaServerLauncher
             string jarPath = Path.Combine(jarDirectory, "server.jar");
             string eulaPath = Path.Combine(jarDirectory, "eula.txt");
             string logPath = Path.Combine(jarDirectory, "server.log");
+            string paperPath = Path.Combine(jarDirectory, "paper.jar");
+
 
             if (!File.Exists(eulaPath))
             {
@@ -198,10 +201,22 @@ namespace JavaServerLauncher
 
             int ramAmount = (int)numericUpDown1.Value;
 
+            string jarToRun;
+
+            if (File.Exists(paperPath)) jarToRun = paperPath;
+            else if (File.Exists(jarPath)) jarToRun = jarPath;
+            else
+            {
+                MessageBox.Show("No executable JAR found for this version.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
                 FileName = javaPath,
-                Arguments = $"-Xmx{ramAmount}M -Xms{ramAmount}M -jar \"{jarPath}\"",
+                Arguments = $"-Xmx{ramAmount}M -Xms{ramAmount}M -jar \"{jarToRun}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -253,6 +268,49 @@ namespace JavaServerLauncher
             }
 
             label3.Text = $"Java Path: {javaPath}";
+        }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            string version = comboBoxVersions.Text;
+            string paperManifestURL = $"https://api.papermc.io/v2/projects/paper/versions/{version}/builds";
+
+            string SelectedVersion = comboBoxVersions.SelectedItem.ToString();
+            string jarDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JavaServerLauncher\\versions\\{SelectedVersion}";
+            string paperPath = Path.Combine(jarDirectory, "paper.jar");
+
+            HttpClient client = new HttpClient();
+            JsonNode paperManifest = JsonNode.Parse(await client.GetStringAsync(paperManifestURL));
+            JsonArray? paperBuilds = (JsonArray)paperManifest?["builds"];
+
+
+            JsonNode? latestBuild = paperBuilds[^1];
+            string? applicationJarName = latestBuild?["downloads"]?["application"]?["name"]?.ToString();
+            string? buildNumber = latestBuild?["build"]?.ToString();
+
+            string paperJarDownloadUrl = $"https://api.papermc.io/v2/projects/paper/versions/{version}/builds/{buildNumber}/downloads/{applicationJarName}";
+
+            //MessageBox.Show(paperJarDownloadUrl);
+
+            async Task DownloadServerJarAsync(string jarUrl, string destinationPath)
+            {
+                HttpClient client = new HttpClient();
+                using HttpResponseMessage response = await client.GetAsync(jarUrl);
+                response.EnsureSuccessStatusCode();
+
+                await using FileStream fs = new FileStream(destinationPath, FileMode.Create);
+                await response.Content.CopyToAsync(fs);
+            }
+            MessageBox.Show("The download may take up to a minute.\nPlease do not close the program.");
+            await DownloadServerJarAsync(paperJarDownloadUrl, paperPath);
+            MessageBox.Show("Download complete.");
+        }
+
+        private void buttonOpenPluginBrowser_Click(object sender, EventArgs e)
+        {
+            string SelectedVersion = comboBoxVersions.Text;
+            string downloadDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JavaServerLauncher\\versions\\{SelectedVersion}";
+            new Form2(SelectedVersion, Path.Combine(downloadDirectory, "plugins")).ShowDialog();
         }
     }
 }

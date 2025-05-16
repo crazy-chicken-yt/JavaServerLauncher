@@ -37,6 +37,8 @@
             button3 = new Button();
             label3 = new Label();
             openFileDialog = new OpenFileDialog();
+            button4 = new Button();
+            buttonOpenPluginBrowser = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
@@ -119,11 +121,33 @@
             // 
             openFileDialog.FileName = "openFileDialog";
             // 
+            // button4
+            // 
+            button4.Location = new Point(329, 100);
+            button4.Name = "button4";
+            button4.Size = new Size(130, 76);
+            button4.TabIndex = 9;
+            button4.Text = "Install Paper";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // buttonOpenPluginBrowser
+            // 
+            buttonOpenPluginBrowser.Location = new Point(465, 100);
+            buttonOpenPluginBrowser.Name = "buttonOpenPluginBrowser";
+            buttonOpenPluginBrowser.Size = new Size(166, 76);
+            buttonOpenPluginBrowser.TabIndex = 10;
+            buttonOpenPluginBrowser.Text = "Open Plugin Browser";
+            buttonOpenPluginBrowser.UseVisualStyleBackColor = true;
+            buttonOpenPluginBrowser.Click += buttonOpenPluginBrowser_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(886, 583);
+            Controls.Add(buttonOpenPluginBrowser);
+            Controls.Add(button4);
             Controls.Add(label3);
             Controls.Add(button3);
             Controls.Add(numericUpDown1);
@@ -153,5 +177,7 @@
         private Button button3;
         private Label label3;
         private OpenFileDialog openFileDialog;
+        private Button button4;
+        private Button buttonOpenPluginBrowser;
     }
 }
